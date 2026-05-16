@@ -1,0 +1,93 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: ali_mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_change_me}
+      MYSQL_DATABASE: ${DB_NAME:-ali_support}
+      MYSQL_USER: ${DB_USER:-ali_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-change_me_db_password}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - ali_net
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ali_backend
+    restart: always
+    env_file: .env
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    volumes:
+      - media_data:/app/media
+    networks:
+      - ali_net
+    ports:
+      - "8000:8000"
+
+  whatsapp-bridge:
+    build:
+      context: ./whatsapp-bridge
+      dockerfile: Dockerfile
+    container_name: ali_wa_bridge
+    restart: always
+    env_file: .env
+    volumes:
+      - wa_sessions:/app/sessions
+      - media_data:/app/media
+    networks:
+      - ali_net
+    ports:
+      - "3001:3001"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ali_frontend
+    restart: always
+    env_file: .env
+    depends_on:
+      - backend
+    networks:
+      - ali_net
+    ports:
+      - "3000:3000"
+
+  nginx:
+    image: nginx:alpine
+    container_name: ali_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - media_data:/var/www/media:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - ali_net
+
+volumes:
+  mariadb_data:
+  wa_sessions:
+  media_data:
+
+networks:
+  ali_net:
+    driver: bridge

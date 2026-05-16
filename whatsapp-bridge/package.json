@@ -1,0 +1,21 @@
+{
+  "name": "ali-support-whatsapp-bridge",
+  "version": "1.0.0",
+  "description": "Baileys WhatsApp bridge for Ali Support",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.9",
+    "express": "^4.19.2",
+    "qrcode-terminal": "^0.12.0",
+    "pino": "^9.2.0",
+    "pino-pretty": "^11.2.1",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2",
+    "form-data": "^4.0.0"
+  }
+}
