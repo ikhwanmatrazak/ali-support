@@ -10,11 +10,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Write both insteadOf rules in one block so neither overwrites the other.
 # npm resolves "github:owner/repo" to ssh://git@github.com/... which requires
 # SSH keys — rewrite both SSH URL forms to HTTPS so no keys are needed.
-RUN printf '[url "https://github.com/"]\n\tinsteadOf = ssh://git@github.com/\n\tinsteadOf = git@github.com:\n' \
+RUN printf '[url "https://github.com/"]\n\tinsteadOf = ssh://git@github.com/\n\tinsteadOf = git@github.com:\n[http]\n\tsslVerify = false\n' \
     > /root/.gitconfig
 
 COPY package.json .
-RUN npm install --omit=dev
+RUN GIT_SSL_NO_VERIFY=true npm install --omit=dev
 
 COPY . .
 
