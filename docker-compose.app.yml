@@ -70,8 +70,12 @@ services:
     image: nginx:alpine
     container_name: ali_nginx
     restart: always
-    ports:
-      - "80:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ali-support.entrypoints=websecure"
+      - "traefik.http.routers.ali-support.rule=Host(`ali-support.lightningcloud.my`)"
+      - "traefik.http.routers.ali-support.tls.certresolver=letsencrypt"
+      - "traefik.http.services.ali-support.loadbalancer.server.port=80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - media_data:/var/www/media:ro
@@ -80,6 +84,7 @@ services:
       - frontend
     networks:
       - ali_app_net
+      - dokploy-network
 
 volumes:
   wa_sessions:
@@ -93,3 +98,7 @@ networks:
   # Internal network for app services only
   ali_app_net:
     driver: bridge
+  # Traefik's network — nginx must join so Traefik can route to it
+  dokploy-network:
+    name: dokploy-network
+    external: true
