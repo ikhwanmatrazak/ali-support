@@ -2,8 +2,10 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Baileys needs these for native crypto and media processing
+# git is required because baileys has GitHub-hosted dependencies
+# pango/cairo libs are needed for image processing in baileys
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
     libglib2.0-0 libcairo2 libpango-1.0-0 libpangocairo-1.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
