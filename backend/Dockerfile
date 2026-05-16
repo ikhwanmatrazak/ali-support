@@ -2,8 +2,10 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+# gcc + libffi needed by cryptography/bcrypt wheels
+# libjpeg needed by Pillow
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc default-libmysqlclient-dev pkg-config \
+    gcc libffi-dev libjpeg62-turbo-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .

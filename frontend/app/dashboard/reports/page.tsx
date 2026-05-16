@@ -6,7 +6,7 @@ import {
   ResponsiveContainer, CartesianGrid,
 } from "recharts";
 import { api } from "@/lib/api";
-import type { OverviewStats, TrendPoint, AgentPerf } from "@/lib/types";
+import type { OverviewStats, TrendPoint } from "@/lib/types";
 
 // AgentPerf type extends schemas
 interface AgentPerfData {
