@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Input, Button } from "@heroui/react";
+import { Button } from "@heroui/react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";
 
@@ -29,71 +29,72 @@ export default function LoginPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)" }}
+      style={{ background: "linear-gradient(135deg, #f0f4ff 0%, #ffffff 50%, #f5f0ff 100%)" }}
     >
-      {/* Background glow blobs */}
+      {/* Subtle background blobs */}
       <div
-        className="absolute top-[-10%] left-[-5%] w-96 h-96 rounded-full opacity-20 pointer-events-none"
-        style={{ background: "radial-gradient(circle, #3b82f6, transparent 70%)" }}
+        className="absolute top-[-8%] left-[-4%] w-96 h-96 rounded-full opacity-30 pointer-events-none"
+        style={{ background: "radial-gradient(circle, #93c5fd, transparent 70%)" }}
       />
       <div
-        className="absolute bottom-[-10%] right-[-5%] w-96 h-96 rounded-full opacity-20 pointer-events-none"
-        style={{ background: "radial-gradient(circle, #6366f1, transparent 70%)" }}
+        className="absolute bottom-[-8%] right-[-4%] w-96 h-96 rounded-full opacity-25 pointer-events-none"
+        style={{ background: "radial-gradient(circle, #c4b5fd, transparent 70%)" }}
       />
 
-      {/* Glass card */}
-      <div className="relative w-full max-w-sm glass rounded-4xl p-8 shadow-float border border-white/10">
+      {/* Card */}
+      <div className="relative w-full max-w-sm bg-white rounded-4xl p-8 shadow-float border border-slate-100">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/40 text-white text-xl font-extrabold">
+          <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/30 text-white text-xl font-extrabold">
             AS
           </div>
-          <h1 className="text-2xl font-bold text-white">Ali Support</h1>
+          <h1 className="text-2xl font-bold text-slate-800">Ali Support</h1>
           <p className="text-slate-400 text-sm mt-1">Internal Support Dashboard</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
-          <Input
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoComplete="email"
-            variant="bordered"
-            classNames={{
-              inputWrapper:
-                "rounded-2xl border-white/20 bg-white/5 hover:border-white/40 data-[focus=true]:border-blue-500",
-              label: "text-slate-400",
-              input: "text-white",
-            }}
-          />
-          <Input
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-            variant="bordered"
-            classNames={{
-              inputWrapper:
-                "rounded-2xl border-white/20 bg-white/5 hover:border-white/40 data-[focus=true]:border-blue-500",
-              label: "text-slate-400",
-              input: "text-white",
-            }}
-          />
-          <Button
+          {/* Email field */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-600 mb-1.5 ml-1">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+              placeholder="admin@ali-support.my"
+              className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder-slate-400 outline-none focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all"
+            />
+          </div>
+
+          {/* Password field */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-600 mb-1.5 ml-1">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+              placeholder="••••••••"
+              className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder-slate-400 outline-none focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all"
+            />
+          </div>
+
+          <button
             type="submit"
-            className="w-full rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:opacity-90"
-            isLoading={loading}
-            size="lg"
+            disabled={loading}
+            className="w-full py-3 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:opacity-90 transition-all disabled:opacity-60 mt-2"
           >
-            Sign In
-          </Button>
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
         </form>
 
-        <p className="text-xs text-slate-600 text-center mt-6">
+        <p className="text-xs text-slate-400 text-center mt-6">
           Ali Support v1.0 · Powered by Baileys + FastAPI
         </p>
       </div>
