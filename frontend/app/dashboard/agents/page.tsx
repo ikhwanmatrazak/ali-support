@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import {
   Button, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter,
-  Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
   Chip, Select, SelectItem, useDisclosure,
 } from "@heroui/react";
 import { format } from "date-fns";
@@ -45,9 +44,9 @@ export default function AgentsPage() {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Agents</h1>
+        <h1 className="text-2xl font-bold text-slate-800">Agents</h1>
         <Button
-          color="primary"
+          className="rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25 font-semibold"
           onClick={() => {
             setForm({ name: "", email: "", password: "", role: "agent" });
             onOpen();
@@ -57,52 +56,55 @@ export default function AgentsPage() {
         </Button>
       </div>
 
-      <Table aria-label="Agents">
-        <TableHeader>
-          <TableColumn>Name</TableColumn>
-          <TableColumn>Email</TableColumn>
-          <TableColumn>Role</TableColumn>
-          <TableColumn>Status</TableColumn>
-          <TableColumn>Joined</TableColumn>
-          <TableColumn>Action</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {agents.map((a) => (
-            <TableRow key={a.id}>
-              <TableCell className="font-medium">{a.name}</TableCell>
-              <TableCell className="text-gray-500">{a.email}</TableCell>
-              <TableCell>
-                <Chip color={a.role === "admin" ? "primary" : "default"} size="sm" variant="flat">
-                  {a.role}
-                </Chip>
-              </TableCell>
-              <TableCell>
-                <Chip color={a.is_active ? "success" : "danger"} size="sm" variant="flat">
-                  {a.is_active ? "Active" : "Inactive"}
-                </Chip>
-              </TableCell>
-              <TableCell className="text-gray-400 text-sm">
+      <div className="space-y-2">
+        {agents.map((a) => (
+          <div
+            key={a.id}
+            className="bg-white rounded-3xl shadow-soft px-5 py-4 flex items-center gap-4"
+          >
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+              {a.name.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="font-semibold text-slate-800 text-sm">{a.name}</div>
+              <div className="text-xs text-slate-400">{a.email}</div>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Chip color={a.role === "admin" ? "primary" : "default"} size="sm" variant="flat">
+                {a.role}
+              </Chip>
+              <Chip color={a.is_active ? "success" : "danger"} size="sm" variant="flat">
+                {a.is_active ? "Active" : "Inactive"}
+              </Chip>
+              <span className="text-xs text-slate-400 hidden sm:block">
                 {format(new Date(a.created_at), "dd MMM yyyy")}
-              </TableCell>
-              <TableCell>
-                <Button size="sm" variant="flat" onClick={() => toggleActive(a)}>
-                  {a.is_active ? "Deactivate" : "Activate"}
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              </span>
+              <Button
+                size="sm"
+                variant="flat"
+                className="rounded-2xl"
+                onClick={() => toggleActive(a)}
+              >
+                {a.is_active ? "Deactivate" : "Activate"}
+              </Button>
+            </div>
+          </div>
+        ))}
+        {agents.length === 0 && (
+          <div className="text-center py-20 text-slate-400">No agents yet</div>
+        )}
+      </div>
 
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalContent>
-          <ModalHeader>Add New Agent</ModalHeader>
+        <ModalContent className="rounded-3xl">
+          <ModalHeader className="text-slate-800">Add New Agent</ModalHeader>
           <ModalBody className="gap-3">
             <Input
               label="Full Name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               variant="bordered"
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Input
               label="Email"
@@ -110,6 +112,7 @@ export default function AgentsPage() {
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               variant="bordered"
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Input
               label="Password"
@@ -117,20 +120,28 @@ export default function AgentsPage() {
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               variant="bordered"
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Select
               label="Role"
               selectedKeys={[form.role]}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
               variant="bordered"
+              classNames={{ trigger: "rounded-2xl border-slate-200" }}
             >
               <SelectItem key="agent" value="agent">Agent</SelectItem>
               <SelectItem key="admin" value="admin">Admin</SelectItem>
             </Select>
           </ModalBody>
           <ModalFooter>
-            <Button variant="light" onClick={onClose}>Cancel</Button>
-            <Button color="primary" isLoading={saving} onClick={create}>Create</Button>
+            <Button variant="light" className="rounded-2xl" onClick={onClose}>Cancel</Button>
+            <Button
+              className="rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+              isLoading={saving}
+              onClick={create}
+            >
+              Create
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

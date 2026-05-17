@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import {
   Button, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter,
-  Card, CardBody, Chip, useDisclosure, Textarea, Switch,
+  Chip, useDisclosure, Textarea, Switch,
 } from "@heroui/react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";
@@ -70,49 +70,71 @@ export default function TemplatesPage() {
 
   return (
     <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-start justify-between mb-6 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Auto-Reply Templates</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-slate-800">Auto-Reply Templates</h1>
+          <p className="text-sm text-slate-500 mt-1">
             Greeting templates are sent automatically on first message. Others are quick replies for agents.
           </p>
         </div>
-        <Button color="primary" onClick={openNew}>+ New Template</Button>
+        <Button
+          className="rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25 font-semibold flex-shrink-0"
+          onClick={openNew}
+        >
+          + New Template
+        </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {templates.map((t) => (
-          <Card key={t.id} className="shadow-none border">
-            <CardBody className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="font-semibold text-gray-800 text-sm">{t.name}</span>
+      {templates.length === 0 ? (
+        <div className="text-center py-20 text-slate-400">No templates yet.</div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {templates.map((t) => (
+            <div key={t.id} className="bg-white rounded-3xl shadow-soft p-5">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <span className="font-semibold text-slate-800 text-sm">{t.name}</span>
                 {t.is_greeting && <Chip color="success" size="sm" variant="flat">Greeting</Chip>}
                 {!t.is_active && <Chip color="default" size="sm" variant="flat">Inactive</Chip>}
               </div>
               {t.trigger_keyword && (
-                <div className="text-xs text-gray-500 mb-1">Trigger: <code>{t.trigger_keyword}</code></div>
+                <div className="text-xs text-slate-500 mb-2">
+                  Trigger: <code className="bg-slate-100 px-1.5 py-0.5 rounded-lg">{t.trigger_keyword}</code>
+                </div>
               )}
-              <p className="text-xs text-gray-600 line-clamp-2 bg-gray-50 rounded p-2 mb-3">{t.reply_en}</p>
+              <div className="text-xs text-slate-600 bg-slate-50 rounded-2xl p-3 mb-4 line-clamp-2">
+                {t.reply_en}
+              </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="flat" onClick={() => openEdit(t)}>Edit</Button>
+                <button
+                  onClick={() => openEdit(t)}
+                  className="text-xs font-medium text-blue-600 hover:text-blue-700 px-3 py-1.5 rounded-2xl bg-blue-50 hover:bg-blue-100 transition-colors"
+                >
+                  Edit
+                </button>
                 {!t.is_greeting && (
-                  <Button size="sm" variant="flat" color="danger" onClick={() => deleteTemplate(t.id)}>Delete</Button>
+                  <button
+                    onClick={() => deleteTemplate(t.id)}
+                    className="text-xs font-medium text-red-500 hover:text-red-600 px-3 py-1.5 rounded-2xl bg-red-50 hover:bg-red-100 transition-colors"
+                  >
+                    Delete
+                  </button>
                 )}
               </div>
-            </CardBody>
-          </Card>
-        ))}
-      </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
-        <ModalContent>
-          <ModalHeader>{selected ? "Edit Template" : "New Template"}</ModalHeader>
+        <ModalContent className="rounded-3xl">
+          <ModalHeader className="text-slate-800">{selected ? "Edit Template" : "New Template"}</ModalHeader>
           <ModalBody className="gap-4">
             <Input
               label="Template Name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               variant="bordered"
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Input
               label="Trigger Keyword (optional)"
@@ -121,6 +143,7 @@ export default function TemplatesPage() {
               onChange={(e) => setForm({ ...form, trigger_keyword: e.target.value })}
               variant="bordered"
               description="If set, this template is also used for auto-reply matching"
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Textarea
               label="Reply (English)"
@@ -129,6 +152,7 @@ export default function TemplatesPage() {
               variant="bordered"
               minRows={3}
               description="Use {ticket_id} to insert ticket number"
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Textarea
               label="Reply (Bahasa Malaysia) — optional"
@@ -136,6 +160,7 @@ export default function TemplatesPage() {
               onChange={(e) => setForm({ ...form, reply_bm: e.target.value })}
               variant="bordered"
               minRows={3}
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Switch
               isSelected={form.is_greeting}
@@ -145,8 +170,14 @@ export default function TemplatesPage() {
             </Switch>
           </ModalBody>
           <ModalFooter>
-            <Button variant="light" onClick={onClose}>Cancel</Button>
-            <Button color="primary" isLoading={saving} onClick={save}>Save</Button>
+            <Button variant="light" className="rounded-2xl" onClick={onClose}>Cancel</Button>
+            <Button
+              className="rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+              isLoading={saving}
+              onClick={save}
+            >
+              Save
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

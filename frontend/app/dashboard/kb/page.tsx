@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import {
   Button, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter,
-  Card, CardBody, Chip, useDisclosure, Textarea, Select, SelectItem,
+  Chip, useDisclosure, Textarea, Select, SelectItem,
 } from "@heroui/react";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api";
@@ -79,8 +79,13 @@ export default function KBPage() {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Knowledge Base</h1>
-        <Button color="primary" onClick={openNew}>+ New Article</Button>
+        <h1 className="text-2xl font-bold text-slate-800">Knowledge Base</h1>
+        <Button
+          className="rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25 font-semibold"
+          onClick={openNew}
+        >
+          + New Article
+        </Button>
       </div>
 
       <Input
@@ -89,53 +94,65 @@ export default function KBPage() {
         onChange={(e) => setSearch(e.target.value)}
         className="max-w-sm mb-6"
         variant="bordered"
+        classNames={{
+          inputWrapper: "rounded-2xl border-slate-200 bg-white hover:border-blue-400",
+        }}
       />
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {articles.map((a) => (
-          <Card key={a.id} className="shadow-none border">
-            <CardBody className="p-4">
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <div className="font-semibold text-gray-800 text-sm">{a.title}</div>
-                <Chip size="sm" variant="flat">{a.category}</Chip>
+      {articles.length === 0 ? (
+        <div className="text-center py-20 text-slate-400">
+          No articles yet. Create your first knowledge base article.
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {articles.map((a) => (
+            <div key={a.id} className="bg-white rounded-3xl shadow-soft p-5">
+              <div className="flex items-start justify-between gap-2 mb-3">
+                <div className="font-semibold text-slate-800 text-sm leading-snug">{a.title}</div>
+                <Chip size="sm" variant="flat" className="flex-shrink-0">{a.category}</Chip>
               </div>
-              <p className="text-xs text-gray-500 line-clamp-2 mb-3">{a.content_en}</p>
-              <div className="flex flex-wrap gap-1 mb-3">
+              <p className="text-xs text-slate-500 line-clamp-2 mb-3">{a.content_en}</p>
+              <div className="flex flex-wrap gap-1.5 mb-4">
                 {a.keywords.slice(0, 6).map((k) => (
-                  <Chip key={k} size="sm" variant="bordered" className="text-xs">{k}</Chip>
+                  <span key={k} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{k}</span>
                 ))}
               </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="flat" onClick={() => openEdit(a)}>Edit</Button>
-                <Button size="sm" variant="flat" color="danger" onClick={() => deleteArticle(a.id)}>Delete</Button>
+                <button
+                  onClick={() => openEdit(a)}
+                  className="text-xs font-medium text-blue-600 hover:text-blue-700 px-3 py-1.5 rounded-2xl bg-blue-50 hover:bg-blue-100 transition-colors"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => deleteArticle(a.id)}
+                  className="text-xs font-medium text-red-500 hover:text-red-600 px-3 py-1.5 rounded-2xl bg-red-50 hover:bg-red-100 transition-colors"
+                >
+                  Delete
+                </button>
               </div>
-            </CardBody>
-          </Card>
-        ))}
-      </div>
-
-      {articles.length === 0 && (
-        <div className="text-center py-20 text-gray-400">
-          No articles yet. Create your first knowledge base article.
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Create/Edit modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
-        <ModalContent>
-          <ModalHeader>{selected ? "Edit Article" : "New Article"}</ModalHeader>
+        <ModalContent className="rounded-3xl">
+          <ModalHeader className="text-slate-800">{selected ? "Edit Article" : "New Article"}</ModalHeader>
           <ModalBody className="gap-4">
             <Input
               label="Title"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
               variant="bordered"
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Select
               label="Category"
               selectedKeys={[form.category]}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
               variant="bordered"
+              classNames={{ trigger: "rounded-2xl border-slate-200" }}
             >
               {CATEGORIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
             </Select>
@@ -145,6 +162,7 @@ export default function KBPage() {
               onChange={(e) => setForm({ ...form, content_en: e.target.value })}
               variant="bordered"
               minRows={4}
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Textarea
               label="Content (Bahasa Malaysia) — optional"
@@ -152,6 +170,7 @@ export default function KBPage() {
               onChange={(e) => setForm({ ...form, content_bm: e.target.value })}
               variant="bordered"
               minRows={3}
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
             <Input
               label="Keywords (comma-separated)"
@@ -160,11 +179,18 @@ export default function KBPage() {
               onChange={(e) => setForm({ ...form, keywords: e.target.value })}
               variant="bordered"
               description="Used for auto-matching incoming WhatsApp messages"
+              classNames={{ inputWrapper: "rounded-2xl border-slate-200" }}
             />
           </ModalBody>
           <ModalFooter>
-            <Button variant="light" onClick={onClose}>Cancel</Button>
-            <Button color="primary" isLoading={saving} onClick={save}>Save</Button>
+            <Button variant="light" className="rounded-2xl" onClick={onClose}>Cancel</Button>
+            <Button
+              className="rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+              isLoading={saving}
+              onClick={save}
+            >
+              Save
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

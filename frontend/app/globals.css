@@ -2,12 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+@layer base {
+  body {
+    background-color: #f1f5f9;
+  }
+}
 
-/* Chat bubble tail effect */
+/* Smooth custom scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Chat bubble tail */
 .bubble-customer { border-bottom-left-radius: 4px !important; }
-.bubble-agent { border-bottom-right-radius: 4px !important; }
+.bubble-agent    { border-bottom-right-radius: 4px !important; }
+
+/* Frosted glass card */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Smooth transitions everywhere */
+* { transition-property: background-color, box-shadow, border-color, opacity, transform;
+    transition-duration: 150ms; transition-timing-function: ease; }
