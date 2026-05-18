@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Chip, Spinner } from "@heroui/react";
+import { Spinner } from "@heroui/react";
+import { QRCodeSVG } from "qrcode.react";
 import { api } from "@/lib/api";
 
 interface BridgeStatus {
@@ -88,8 +89,8 @@ export default function SettingsPage() {
                 <p className="text-sm text-slate-500 mb-4 leading-relaxed">
                   Open WhatsApp on your phone → <strong>Linked Devices</strong> → <strong>Link a device</strong> → Scan this QR:
                 </p>
-                <div className="bg-white border-2 border-slate-100 rounded-3xl p-5 inline-block">
-                  <pre className="text-[6px] leading-[6px] font-mono select-none">{qr}</pre>
+                <div className="bg-white border-2 border-slate-100 rounded-3xl p-6 inline-block">
+                  <QRCodeSVG value={qr} size={220} />
                 </div>
               </div>
             ) : (
