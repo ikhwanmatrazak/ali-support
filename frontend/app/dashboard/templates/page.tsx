@@ -125,8 +125,8 @@ export default function TemplatesPage() {
         </div>
       )}
 
-      <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
-        <ModalContent className="rounded-3xl">
+      <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside" classNames={{ base: "rounded-3xl" }}>
+        <ModalContent>
           <ModalHeader className="text-slate-800">{selected ? "Edit Template" : "New Template"}</ModalHeader>
           <ModalBody className="gap-4">
             <Input

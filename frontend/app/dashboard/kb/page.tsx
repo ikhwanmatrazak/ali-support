@@ -136,8 +136,8 @@ export default function KBPage() {
         </div>
       )}
 
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
-        <ModalContent className="rounded-3xl">
+      <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside" classNames={{ base: "rounded-3xl" }}>
+        <ModalContent>
           <ModalHeader className="text-slate-800">{selected ? "Edit Article" : "New Article"}</ModalHeader>
           <ModalBody className="gap-4">
             <Input

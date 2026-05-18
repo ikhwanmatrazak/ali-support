@@ -95,8 +95,8 @@ export default function AgentsPage() {
         )}
       </div>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalContent className="rounded-3xl">
+      <Modal isOpen={isOpen} onClose={onClose} classNames={{ base: "rounded-3xl" }}>
+        <ModalContent>
           <ModalHeader className="text-slate-800">Add New Agent</ModalHeader>
           <ModalBody className="gap-3">
             <Input
