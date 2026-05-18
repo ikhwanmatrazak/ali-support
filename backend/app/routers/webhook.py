@@ -134,10 +134,12 @@ def _detect_priority(text: str) -> models.TicketPriority:
 async def _send_whatsapp(phone: str, message: str):
     try:
         async with httpx.AsyncClient(timeout=10) as client:
-            await client.post(
+            resp = await client.post(
                 f"{settings.WHATSAPP_BRIDGE_URL}/send-message",
                 json={"to": phone, "message": message},
                 headers={"x-bridge-secret": settings.WHATSAPP_BRIDGE_SECRET},
             )
-    except Exception:
-        pass
+            if resp.status_code != 200:
+                print(f"[WA] Bridge error {resp.status_code}: {resp.text}")
+    except Exception as e:
+        print(f"[WA] Failed to send to {phone}: {e}")
